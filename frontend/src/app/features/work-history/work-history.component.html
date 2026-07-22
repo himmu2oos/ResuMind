@@ -1,0 +1,29 @@
+<div class="page">
+  <h1>Work Experience</h1>
+  <p class="subtitle">My professional journey and career highlights</p>
+  <div class="timeline">
+    <div class="item" *ngFor="let j of work; let i = index" [class.current]="j.isCurrent">
+      <div class="marker">
+        <div class="dot" [class.active]="j.isCurrent"></div>
+        <div class="line" *ngIf="i < work.length - 1"></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <div>
+            <h3>{{ j.jobTitle }}</h3>
+            <p class="company">{{ j.company }} <span class="loc" *ngIf="j.location">· {{ j.location }}</span></p>
+          </div>
+          <span class="badge" [class.current-badge]="j.isCurrent">{{ fmt(j.startDate) }} – {{ j.endDate ? fmt(j.endDate) : 'Present' }}</span>
+        </div>
+        <p class="desc">{{ j.description }}</p>
+        <div *ngIf="j.highlights?.length" class="highlights">
+          <h4>Key Achievements</h4>
+          <ul><li *ngFor="let h of j.highlights">{{ h }}</li></ul>
+        </div>
+        <div class="tech" *ngIf="j.technologies?.length">
+          <span *ngFor="let t of j.technologies">{{ t }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

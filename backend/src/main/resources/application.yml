@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: recruiter-portal
+
+  datasource:
+    url: jdbc:h2:mem:recruiterdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+
+# Resume document configuration
+resume:
+  documents-path: ${RESUME_DOCUMENTS_PATH:./documents}
+
+# AI Configuration
+ai:
+  provider: ${AI_PROVIDER:demo}
+  api-key: ${AI_API_KEY:demo}
+  model: ${AI_MODEL:gpt-4o-mini}
+  max-tokens: 1000
+
+# RAG Configuration
+rag:
+  enabled: ${RAG_ENABLED:false}
+  documents-path: ${DOCUMENTS_PATH:./documents}
+  chroma:
+    host: ${CHROMA_HOST:localhost}
+    port: ${CHROMA_PORT:8000}
+    collection-name: resume-embeddings
+  ollama:
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    model: ${OLLAMA_MODEL:llama3.2}
+    embedding-model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+
+# GitHub
+github:
+  username: ${GITHUB_USERNAME:your-github-username}
+  token: ${GITHUB_TOKEN:}
+
+# CORS
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+
+# Rate Limiting
+rate-limit:
+  chat:
+    requests-per-hour: 30
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/recruiter_portal
+    username: ${DB_USERNAME:appuser}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  h2:
+    console:
+      enabled: false

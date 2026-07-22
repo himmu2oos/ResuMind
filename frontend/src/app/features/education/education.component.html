@@ -1,0 +1,17 @@
+<div class="page">
+  <h1>Education</h1>
+  <p class="subtitle">My academic background and qualifications</p>
+  <div class="list">
+    <div class="card" *ngFor="let e of education">
+      <div class="header">
+        <span class="icon">🎓</span>
+        <span class="date">{{ fmt(e.startDate) }} – {{ e.endDate ? fmt(e.endDate) : 'Present' }}</span>
+      </div>
+      <h3>{{ e.degree }}</h3>
+      <p class="inst">{{ e.institution }}</p>
+      <p class="field" *ngIf="e.fieldOfStudy">{{ e.fieldOfStudy }}</p>
+      <div class="gpa" *ngIf="e.gpa"><span class="label">GPA</span> <span class="val">{{ e.gpa }}/4.0</span></div>
+      <p class="desc" *ngIf="e.description">{{ e.description }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,280 @@
+.upload-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+// Status card
+.status-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+
+  h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+
+  .status-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .status-value {
+    font-weight: 600;
+    font-size: 0.95rem;
+    overflow-wrap: break-word;
+  }
+}
+
+// Drop zone
+.drop-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: var(--color-surface);
+
+  &.drag-over {
+    border-color: var(--color-accent);
+    background: var(--color-accent-light);
+  }
+
+  &.has-file {
+    border-style: solid;
+    padding: 1.5rem 2rem;
+  }
+}
+
+.drop-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .drop-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .drop-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .drop-subtext {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .drop-hint {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.file-btn {
+  cursor: pointer;
+  margin: 0.5rem 0;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .file-icon {
+    font-size: 2rem;
+  }
+
+  .file-info {
+    flex: 1;
+    text-align: left;
+
+    .file-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .file-size {
+      color: var(--color-text-muted);
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.remove-btn {
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+}
+
+// Actions
+.actions {
+  margin-top: 1.5rem;
+  text-align: center;
+
+  .upload-btn {
+    min-width: 220px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+  }
+
+  .upload-note {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+  }
+}
+
+// Messages
+.message {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+
+  &.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+  }
+
+  &.success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+
+    h3 {
+      color: #16a34a;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+
+  .result-number {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #16a34a;
+  }
+
+  .result-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.result-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.primary {
+    background: var(--color-accent);
+    color: #fff;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &.outline {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+
+    &:hover {
+      background: var(--color-surface);
+    }
+  }
+}
+
+.spinner-sm {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .result-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

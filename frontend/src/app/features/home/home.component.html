@@ -1,0 +1,130 @@
+<!-- Loading State -->
+<div class="loading" *ngIf="!profile">
+  <div class="spinner"></div>
+  <p>Loading profile...</p>
+</div>
+
+<!-- Hero Section -->
+<section class="hero" *ngIf="profile">
+  <div class="hero-content">
+    <p class="greeting">Hello, I'm</p>
+    <h1 class="name">{{ profile.fullName }}</h1>
+    <h2 class="title">{{ profile.title }}</h2>
+    <p class="summary">{{ profile.summary }}</p>
+    <div class="cta">
+      <a routerLink="/chat" class="btn primary">💬 Ask AI About Me</a>
+      <a routerLink="/projects" class="btn outline">View Projects</a>
+      <a [href]="'mailto:' + profile.email" class="btn outline">📧 Contact</a>
+    </div>
+    <div class="social">
+      <a *ngIf="profile.githubUrl" [href]="profile.githubUrl" target="_blank" rel="noopener">GitHub ↗</a>
+      <a *ngIf="profile.linkedinUrl" [href]="profile.linkedinUrl" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a *ngIf="profile.portfolioUrl" [href]="profile.portfolioUrl" target="_blank" rel="noopener">Portfolio ↗</a>
+      <a *ngIf="profile.email" [href]="'mailto:' + profile.email">Email ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar" *ngIf="profile">
+  <div class="stat">
+    <span class="stat-number">{{ skillCount }}+</span>
+    <span class="stat-label">Technical Skills</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">{{ workCount }}+</span>
+    <span class="stat-label">Years Experience</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">{{ totalProjects }}</span>
+    <span class="stat-label">Projects Built</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">{{ educationCount }}</span>
+    <span class="stat-label">Degrees</span>
+  </div>
+</section>
+
+<!-- Skills Section -->
+<section class="section" *ngIf="profile && profile.skills && profile.skills.length">
+  <div class="section-header">
+    <h3>Technical Skills</h3>
+    <a routerLink="/about" class="see-all">View all →</a>
+  </div>
+  <div class="tags">
+    <span *ngFor="let s of profile.skills" class="tag">{{ s }}</span>
+  </div>
+</section>
+
+<!-- Featured Projects -->
+<section class="section" *ngIf="featured.length">
+  <div class="section-header">
+    <h3>Featured Projects</h3>
+    <a routerLink="/projects" class="see-all">View all →</a>
+  </div>
+  <div class="project-grid">
+    <div class="project-card" *ngFor="let p of featured">
+      <div class="card-top">
+        <span class="card-icon">📁</span>
+        <div class="card-links">
+          <a *ngIf="p.githubUrl" [href]="p.githubUrl" target="_blank" rel="noopener" class="card-link">Code ↗</a>
+          <a *ngIf="p.liveUrl" [href]="p.liveUrl" target="_blank" rel="noopener" class="card-link">Demo ↗</a>
+        </div>
+      </div>
+      <h4 class="card-title">{{ p.name }}</h4>
+      <p class="card-desc">{{ p.description }}</p>
+      <div class="card-meta" *ngIf="p.category">
+        <span class="category-badge">{{ p.category }}</span>
+        <span class="star-count" *ngIf="p.stars">⭐ {{ p.stars }}</span>
+      </div>
+      <div class="tags sm">
+        <span *ngFor="let t of p.techStack?.slice(0, 5)" class="tag">{{ t }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Current Role Preview -->
+<section class="section" *ngIf="latestWork">
+  <div class="section-header">
+    <h3>Current Role</h3>
+    <a routerLink="/experience" class="see-all">Full history →</a>
+  </div>
+  <div class="work-preview">
+    <div class="work-info">
+      <h4>{{ latestWork.jobTitle }}</h4>
+      <p class="work-company">{{ latestWork.company }} <span *ngIf="latestWork.location">· {{ latestWork.location }}</span></p>
+      <p class="work-desc">{{ latestWork.description }}</p>
+    </div>
+    <div class="work-tech" *ngIf="latestWork.technologies?.length">
+      <span *ngFor="let t of latestWork.technologies?.slice(0, 6)" class="tag sm-tag">{{ t }}</span>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Navigation -->
+<section class="section">
+  <h3 class="nav-heading">Explore More</h3>
+  <div class="nav-grid">
+    <a routerLink="/about" class="nav-card">
+      <span class="nav-icon">👤</span>
+      <strong>About</strong>
+      <small>Bio, contact &amp; skills</small>
+    </a>
+    <a routerLink="/education" class="nav-card">
+      <span class="nav-icon">🎓</span>
+      <strong>Education</strong>
+      <small>Degrees &amp; academics</small>
+    </a>
+    <a routerLink="/experience" class="nav-card">
+      <span class="nav-icon">💼</span>
+      <strong>Experience</strong>
+      <small>Career timeline</small>
+    </a>
+    <a routerLink="/chat" class="nav-card accent">
+      <span class="nav-icon">🤖</span>
+      <strong>Ask AI</strong>
+      <small>Chat about me</small>
+    </a>
+  </div>
+</section>

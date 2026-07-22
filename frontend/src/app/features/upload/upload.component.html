@@ -1,0 +1,111 @@
+<section class="upload-page">
+  <div class="page-header">
+    <h1>Upload Resume</h1>
+    <p class="subtitle">Upload your resume (PDF, DOCX, or TXT) to automatically populate your portfolio with your information.</p>
+  </div>
+
+  <!-- Current Status -->
+  <div class="status-card" *ngIf="status">
+    <h3>Current Data Status</h3>
+    <div class="status-grid">
+      <div class="status-item">
+        <span class="status-label">Document</span>
+        <span class="status-value">{{ status.currentFile || 'None' }}</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Profile</span>
+        <span class="status-value">{{ status.profileCount }} loaded</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Education</span>
+        <span class="status-value">{{ status.educationCount }} entries</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Experience</span>
+        <span class="status-value">{{ status.workExperienceCount }} entries</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Projects</span>
+        <span class="status-value">{{ status.projectCount }} entries</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Area -->
+  <div
+    class="drop-zone"
+    [class.drag-over]="dragOver"
+    [class.has-file]="selectedFile"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <div class="drop-content" *ngIf="!selectedFile">
+      <span class="drop-icon">📄</span>
+      <p class="drop-text">Drag & drop your resume here</p>
+      <p class="drop-subtext">or</p>
+      <label class="btn primary file-btn">
+        Browse Files
+        <input
+          type="file"
+          accept=".pdf,.docx,.txt"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+      </label>
+      <p class="drop-hint">Supports PDF, DOCX, and TXT (max 10MB)</p>
+    </div>
+
+    <div class="file-preview" *ngIf="selectedFile">
+      <span class="file-icon">📄</span>
+      <div class="file-info">
+        <p class="file-name">{{ selectedFile.name }}</p>
+        <p class="file-size">{{ formatFileSize(selectedFile.size) }}</p>
+      </div>
+      <button class="btn outline remove-btn" (click)="selectedFile = null">Remove</button>
+    </div>
+  </div>
+
+  <!-- Upload Button -->
+  <div class="actions" *ngIf="selectedFile">
+    <button class="btn primary upload-btn" (click)="upload()" [disabled]="uploading">
+      <span *ngIf="!uploading">Upload & Parse Resume</span>
+      <span *ngIf="uploading">
+        <span class="spinner-sm"></span> Processing...
+      </span>
+    </button>
+    <p class="upload-note">This will replace all existing portfolio data with data extracted from your resume.</p>
+  </div>
+
+  <!-- Error -->
+  <div class="message error" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Success -->
+  <div class="message success" *ngIf="uploadResult?.success">
+    <h3>Resume Parsed Successfully!</h3>
+    <div class="result-grid">
+      <div class="result-item">
+        <span class="result-number">{{ uploadResult.profileCount }}</span>
+        <span class="result-label">Profile</span>
+      </div>
+      <div class="result-item">
+        <span class="result-number">{{ uploadResult.educationCount }}</span>
+        <span class="result-label">Education</span>
+      </div>
+      <div class="result-item">
+        <span class="result-number">{{ uploadResult.workExperienceCount }}</span>
+        <span class="result-label">Experience</span>
+      </div>
+      <div class="result-item">
+        <span class="result-number">{{ uploadResult.projectCount }}</span>
+        <span class="result-label">Projects</span>
+      </div>
+    </div>
+    <div class="result-actions">
+      <a routerLink="/" class="btn primary">View Portfolio</a>
+      <a routerLink="/about" class="btn outline">View Profile</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,27 @@
+<div class="page" *ngIf="profile">
+  <h1>About Me</h1>
+  <p class="subtitle">Get to know me beyond the resume</p>
+  <div class="grid">
+    <div class="main">
+      <p class="bio">{{ profile.summary }}</p>
+      <div class="contact">
+        <h4>Get in Touch</h4>
+        <a *ngIf="profile.email" [href]="'mailto:' + profile.email">✉ {{ profile.email }}</a>
+        <a *ngIf="profile.linkedinUrl" [href]="profile.linkedinUrl" target="_blank">🔗 LinkedIn</a>
+        <a *ngIf="profile.githubUrl" [href]="profile.githubUrl" target="_blank">⌨ GitHub</a>
+        <span *ngIf="profile.location">📍 {{ profile.location }}</span>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="box">
+        <h4>Technical Skills</h4>
+        <div class="chips"><span *ngFor="let s of profile.skills" class="chip accent">{{ s }}</span></div>
+      </div>
+      <div class="box" *ngIf="profile.languages?.length">
+        <h4>Languages</h4>
+        <div class="chips"><span *ngFor="let l of profile.languages" class="chip">{{ l }}</span></div>
+      </div>
+      <a routerLink="/chat" class="cta-box">🤖 <span><strong>Have questions?</strong><br><small>Chat with my AI assistant</small></span></a>
+    </div>
+  </div>
+</div>

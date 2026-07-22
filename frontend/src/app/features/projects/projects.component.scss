@@ -1,0 +1,22 @@
+.page{max-width:1000px;margin:0 auto;padding:3rem 2rem}
+h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}
+.subtitle{color:var(--color-text-muted);margin-bottom:2rem}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.filters button{padding:.5rem 1.25rem;border:1px solid var(--color-border);border-radius:100px;background:transparent;cursor:pointer;font-size:.85rem;font-weight:500;transition:all .2s}
+.filters button.active{background:var(--color-accent);color:#fff;border-color:var(--color-accent)}
+.filters button:hover:not(.active){border-color:var(--color-accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.card{padding:1.75rem;border:1px solid var(--color-border);border-radius:12px;display:flex;flex-direction:column;transition:all .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08);border-color:var(--color-accent)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;font-size:1.5rem}
+.links{display:flex;gap:.75rem}
+.links a{font-size:.8rem;color:var(--color-accent);text-decoration:none;font-weight:600}
+.links a:hover{text-decoration:underline}
+h3{font-size:1.15rem;font-weight:700;margin:0 0 .5rem}
+p{font-size:.9rem;color:var(--color-text-muted);line-height:1.6;flex:1;margin-bottom:1rem}
+.meta{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.cat{padding:.2rem .6rem;background:var(--color-accent-light);color:var(--color-accent);border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.stars{font-size:.8rem;color:var(--color-text-muted)}
+.tech{display:flex;flex-wrap:wrap;gap:.4rem}
+.tech span{padding:.2rem .5rem;background:var(--color-surface);border-radius:4px;font-size:.72rem;font-weight:500;color:var(--color-text-muted)}
+.empty{text-align:center;padding:3rem;color:var(--color-text-muted)}

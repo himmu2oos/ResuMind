@@ -1,0 +1,67 @@
+<div class="chat-wrap">
+  <div class="header">
+    <div class="header-info">
+      <div class="avatar">🤖</div>
+      <div>
+        <h2>Ask AI About Me</h2>
+        <p>Powered by AI — ask about my experience, skills, or projects</p>
+      </div>
+    </div>
+    <button class="clear" (click)="clear()">↻ New Chat</button>
+  </div>
+
+  <div class="messages" #msgBox>
+    <div class="message assistant" *ngIf="(messages$ | async)?.length === 0">
+      <div class="bubble">
+        <p>
+          Hi! I'm an AI assistant that knows all about this candidate. Ask me
+          anything! Here are some ideas:
+        </p>
+        <div class="suggestions">
+          <button *ngFor="let q of suggestions" (click)="ask(q)">
+            {{ q }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="message"
+      *ngFor="let m of messages$ | async"
+      [ngClass]="m.role === 'USER' ? 'user' : 'assistant'"
+    >
+      <div class="bubble">
+        <p>{{ m.content }}</p>
+      </div>
+    </div>
+    <div class="message assistant" *ngIf="loading$ | async">
+      <div class="bubble typing">
+        <span class="dot"></span><span class="dot"></span
+        ><span class="dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <input
+        type="text"
+        [(ngModel)]="msg"
+        (keyup.enter)="send()"
+        placeholder="Ask about my experience, skills, projects..."
+        [disabled]="(loading$ | async) === true"
+        maxlength="1000"
+      />
+      <button
+        class="send"
+        (click)="send()"
+        [disabled]="!msg.trim() || (loading$ | async) === true"
+      >
+        ➤
+      </button>
+    </div>
+    <p class="disclaimer">
+      AI responses are based on profile data. For specific inquiries, reach out
+      directly.
+    </p>
+  </div>
+</div>
