@@ -74,6 +74,10 @@ rate-limit:
   chat:
     requests-per-hour: 30
 
+# Admin
+admin:
+  upload-key: ${ADMIN_UPLOAD_KEY:changeme}
+
 ---
 spring:
   config:

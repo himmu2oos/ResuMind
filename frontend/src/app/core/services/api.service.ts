@@ -47,10 +47,12 @@ export class ApiService {
     return this.http.get<Project>(`${this.base}/projects/${id}`);
   }
 
-  uploadResume(file: File): Observable<any> {
+  uploadResume(file: File, adminKey: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${this.base}/document/upload`, formData);
+    return this.http.post(`${this.base}/document/upload`, formData, {
+        headers: {'X-Admin-Key': adminKey},
+    });
   }
 
   getDocumentStatus(): Observable<any> {

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-upload',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss',
 })
@@ -17,6 +18,7 @@ export class UploadComponent implements OnInit {
   error: string | null = null;
   dragOver = false;
   selectedFile: File | null = null;
+  adminKey = '';
 
   constructor(private api: ApiService) {}
 
@@ -76,16 +78,20 @@ export class UploadComponent implements OnInit {
     this.error = null;
     this.uploadResult = null;
 
-    this.api.uploadResume(this.selectedFile).subscribe({
+    this.api.uploadResume(this.selectedFile, this.adminKey).subscribe({
       next: (result) => {
         this.uploading = false;
         this.uploadResult = result;
         this.selectedFile = null;
+        this.adminKey = '';
         this.loadStatus();
       },
       error: (err) => {
         this.uploading = false;
         this.error = err.error?.message || 'Upload failed. Please try again.';
+        if (err.status === 401){
+            this.adminKey = '';
+        }
       },
     });
   }

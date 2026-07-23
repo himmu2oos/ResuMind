@@ -66,6 +66,17 @@
     </div>
   </div>
 
+  <!-- Admin Key -->
+  <div class="admin-key-field" *ngIf="selectedFile">
+    <label for="adminKey">Admin Key</label>
+    <input
+            id="adminKey"
+            type="password"
+            [(ngModel)]="adminKey"
+            placeholder="Enter admin key to upload"
+    />
+  </div>
+
   <!-- Upload Button -->
   <div class="actions" *ngIf="selectedFile">
     <button class="btn primary upload-btn" (click)="upload()" [disabled]="uploading">

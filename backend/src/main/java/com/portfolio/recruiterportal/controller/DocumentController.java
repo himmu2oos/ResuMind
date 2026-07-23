@@ -38,8 +38,19 @@ public class DocumentController {
     @Value("${resume.documents-path:./documents}")
     private String documentsPath;
 
+    @Value("${admin.upload-key}")
+    private String uploadKey;
+
     @PostMapping("/upload")
-    public ResponseEntity<Map<String, Object>> uploadResume(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> uploadResume(
+            @RequestParam("file") MultipartFile file,
+            @RequestHeader(value = "X-Admin-Key", required = false) String providedKey) {
+
+        if (providedKey == null || !providedKey.equals(uploadKey)) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("success", false, "message", "Unauthorized"));
+        }
+
         if (file.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(Map.of("success", false, "message", "No file provided"));
