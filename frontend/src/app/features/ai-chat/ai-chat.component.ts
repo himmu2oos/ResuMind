@@ -21,7 +21,7 @@ export class AiChatComponent implements OnInit, AfterViewChecked {
     "What's their strongest skill?",
     'Tell me about their work experience',
     'What projects have they built?',
-    'Why would they be a good senior hire?',
+    'Why would they be a good hire?',
     'What technologies do they know?',
     "What's their education?",
   ];

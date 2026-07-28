@@ -77,9 +77,16 @@ public class ResumeParserService {
         log.info("Identified sections: {}", sections.keySet());
 
         ParsedResume result = new ParsedResume();
-        result.setProfile(extractProfile(rawText, sections));
+        Profile profile = extractProfile(rawText,sections);
+        List<WorkExperience> workExperience = extractWorkExperience(sections);
+
+        if (profile.getTitle() == null && !workExperience.isEmpty()){
+            profile.setTitle(workExperience.get(0).getJobTitle());
+        }
+
+        result.setProfile(profile);
         result.setEducation(extractEducation(sections));
-        result.setWorkExperience(extractWorkExperience(sections));
+        result.setWorkExperience(workExperience);
         result.setProjects(extractProjects(sections));
 
         return result;

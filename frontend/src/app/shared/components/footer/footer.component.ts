@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ApiService } from '@core/services/api.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  imports: [CommonModule],
   template: `
     <footer>
-      <p>Built with Angular + Spring Boot · AI-Powered · &copy; {{ year }} Your Name</p>
+      <p>Built with Angular + Spring Boot · AI-Powered · &copy; {{ year }} {{ name }}</p>
     </footer>
   `,
   styles: [`
@@ -18,6 +21,16 @@ import { Component } from '@angular/core';
     }
   `],
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
   year = new Date().getFullYear();
+
+  name = 'Your Name';
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit(): void {
+    this.api.profile$.subscribe((p) => {
+      if (p) this.name = p.fullName;
+    });
+  }
 }

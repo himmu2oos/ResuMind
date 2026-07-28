@@ -85,6 +85,7 @@ export class UploadComponent implements OnInit {
         this.selectedFile = null;
         this.adminKey = '';
         this.loadStatus();
+        this.api.loadProfile();
       },
       error: (err) => {
         this.uploading = false;

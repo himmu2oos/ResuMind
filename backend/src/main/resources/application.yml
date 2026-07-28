@@ -45,7 +45,8 @@ ai:
   provider: ${AI_PROVIDER:demo}
   api-key: ${AI_API_KEY:demo}
   model: ${AI_MODEL:gpt-4o-mini}
-  max-tokens: 1000
+  base-url: ${AI_BASE_URL:https://api.openai.com/v1/chat/completions}
+  max-tokens: 16384
 
 # RAG Configuration
 rag:

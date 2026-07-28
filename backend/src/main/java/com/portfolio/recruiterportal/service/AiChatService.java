@@ -39,6 +39,9 @@ public class AiChatService {
     @Value("${ai.model:gpt-4o-mini}")
     private String model;
 
+    @Value("${ai.base-url:https://api.openai.com/v1/chat/completions}")
+    private String baseUrl;
+
     @Value("${ai.max-tokens:1000}")
     private int maxTokens;
 
@@ -68,15 +71,14 @@ public class AiChatService {
             List<ChatMessage> history = chatRepo.findBySessionIdOrderByTimestampAsc(sessionId);
 
             return switch (aiProvider.toLowerCase()) {
-                case "openai" -> callOpenAi(systemPrompt, history, userMessage);
+                case "nvidia" -> callOpenAi(systemPrompt, history, userMessage);
                 case "anthropic" -> callAnthropic(systemPrompt, history, userMessage);
                 case "ollama" -> callOllama(systemPrompt, history, userMessage);
                 default -> demoResponse(userMessage);
             };
         } catch (Exception e) {
-            log.error("AI chat error: {}", e.getMessage(), e);
-            return "I'm sorry, I'm having trouble responding right now. " +
-                   "Please try again or explore the other sections of this portfolio.";
+            log.error("AI provider call failed, falling back to demo mode: {}", e.getMessage(), e);
+            return demoResponse(userMessage);
         }
     }
 
@@ -184,13 +186,26 @@ public class AiChatService {
             }
             return sb.toString();
         }
-        if (msg.contains("contact") || msg.contains("email") || msg.contains("reach") || msg.contains("hire")) {
-            return String.format("You can reach %s at %s. They're also on LinkedIn at %s and GitHub at %s.",
-                profile.getFullName(), profile.getEmail(), profile.getLinkedinUrl(), profile.getGithubUrl());
+
+        if(msg.contains("contact") || msg.contains("email") || msg.contains("reach")){
+            StringBuilder contact = new StringBuilder(
+                    String.format("You can reach %s at %s.", profile.getFullName(), profile.getEmail())
+            );
+            List<String> socials = new ArrayList<>();
+            if(profile.getLinkedinUrl() != null)
+                socials.add("LinkedIn at "+ profile.getLinkedinUrl());
+            if(profile.getGithubUrl() != null)
+                socials.add("GitHub at "+ profile.getGithubUrl());
+            if(!socials.isEmpty()){
+                contact.append(" They're also on ").append(String.join(" and ",socials)).append(".");
+            }
+            return contact.toString();
         }
+
         if (msg.contains("who") || msg.contains("about") || msg.contains("tell me") || msg.contains("introduce")) {
+            String title = profile.getTitle() != null ? profile.getTitle() : "professional";
             return String.format("%s is a %s based in %s. %s\n\nThey have %d skills including %s. Check out the Experience and Projects sections for more detail!",
-                profile.getFullName(), profile.getTitle(), profile.getLocation(), profile.getSummary(),
+                profile.getFullName(), title, profile.getLocation(), profile.getSummary(),
                 profile.getSkills().size(), String.join(", ", profile.getSkills().subList(0, Math.min(5, profile.getSkills().size()))));
         }
         if (msg.contains("senior") || msg.contains("fit") || msg.contains("why") || msg.contains("good")) {
@@ -198,8 +213,7 @@ public class AiChatService {
                 profile.getFullName(), String.join(", ", profile.getSkills().subList(0, Math.min(4, profile.getSkills().size()))));
         }
 
-        return String.format("Great question! %s is a %s with experience in %s. Feel free to ask me about their skills, work experience, education, or projects — or explore those sections directly in the navigation above!",
-            profile.getFullName(), profile.getTitle(), String.join(", ", profile.getSkills().subList(0, Math.min(3, profile.getSkills().size()))));
+        return "I can only help with questions about this candidate's background — try asking about their skills, work experience, education, or projects!";
     }
 
     private String buildSystemPrompt() {
@@ -210,22 +224,31 @@ public class AiChatService {
 
         StringBuilder sb = new StringBuilder();
         sb.append("""
-            You are an AI assistant on a personal portfolio website. Recruiters visit this site to learn about the candidate.
-            Answer questions helpfully, professionally, and enthusiastically.
-            
-            RULES:
-            - Only share information provided below. Never invent facts.
-            - Be positive and highlight strengths, but stay honest.
-            - If you don't know something, say so and suggest they reach out directly.
-            - Keep answers concise (2-4 sentences for simple questions).
-            - Never share sensitive info like SSN or exact salary.
-            
-            """);
+                You are an AI assistant on a personal portfolio website. Recruiters visit this site to learn about the candidate.
+                Answer questions helpfully, professionally, and enthusiastically.
+                            
+                RULES:
+                - When answering questions ABOUT THE CANDIDATE (skills, experience, education,
+                  projects, fit for a role), only use the information provided below — never
+                  invent or guess details about them.
+                - For general questions unrelated to the candidate (small talk, general knowledge,
+                  anything else), answer normally and helpfully using your own knowledge — you are
+                  not restricted to the candidate's data for those.
+                - Be positive and highlight the candidate's strengths when discussing them, but
+                  stay honest.
+                - If asked whether the candidate is a good fit, or why they should be hired for a
+                  role, first ask the recruiter to paste the job description. Once given one,
+                  compare it against the candidate's skills, experience, and background below, and
+                  give specific, concrete reasons for fit (or honest gaps) — not generic praise.
+                - Keep answers concise (2-4 sentences for simple questions).
+                - Never share sensitive info like SSN or exact salary.
+                            
+                """);
 
         if (profile != null) {
             sb.append("=== CANDIDATE PROFILE ===\n");
             sb.append("Name: ").append(profile.getFullName()).append("\n");
-            sb.append("Title: ").append(profile.getTitle()).append("\n");
+            if (profile.getTitle() != null) sb.append("Title: ").append(profile.getTitle()).append("\n");
             sb.append("Location: ").append(profile.getLocation()).append("\n");
             sb.append("Summary: ").append(profile.getSummary()).append("\n");
             sb.append("Email: ").append(profile.getEmail()).append("\n");
@@ -276,7 +299,7 @@ public class AiChatService {
 
     // ── OpenAI ──
     private String callOpenAi(String systemPrompt, List<ChatMessage> history, String userMessage) throws Exception {
-        String url = "https://api.openai.com/v1/chat/completions";
+        String url = baseUrl;
 
         List<Map<String, String>> messages = new ArrayList<>();
         messages.add(Map.of("role", "system", "content", systemPrompt));
@@ -285,7 +308,12 @@ public class AiChatService {
         }
         messages.add(Map.of("role", "user", "content", userMessage));
 
-        Map<String, Object> body = Map.of("model", model, "messages", messages, "max_tokens", maxTokens, "temperature", 0.7);
+        Map<String, Object> body = Map.of("model", model,
+                "messages", messages,
+                "max_tokens", maxTokens,
+                "temperature", 1,
+                "top_p", 1,
+                "seed", 42);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

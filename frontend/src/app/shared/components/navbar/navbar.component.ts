@@ -151,9 +151,9 @@ export class NavbarComponent {
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
-    this.api.getProfile().subscribe((p) => {
-      console.log("Name:", p.fullName);
-      this.name = p.fullName;
+    this.api.profile$.subscribe((p) =>{
+        if (p) this.name = p.fullName;
     });
+    this.api.loadProfile();
   }
 }
